@@ -7,22 +7,20 @@ const createOrder = async (req, resp) => {
     userId, client, status, products,
   } = req.body;
   if (!userId || !products || products.length === 0) {
-    resp.status(400).json({ message: 'You don´t enter products or userId' });
-  } else {
-    const newOrder = new Order({
-      userId, client, status, products,
-    });
-    products.map(async (el) => {
-      const foundProduct = await Product.find({ _id: { $in: el.product } });
-      if (foundProduct.length === 0) {
-        resp.status(404).json({ message: 'The product doesn´t exists' });
-      } else {
-        const savedOrder = await newOrder.save();
-        const populatedOrder = await Order.findOne({ _id: savedOrder._id }).populate('products.product');
-        resp.status(200).json(populatedOrder);
-      }
-    });
+    return resp.status(400).json({ message: 'You don´t enter products or userId' });
   }
+  const newOrder = new Order({
+    userId, client, status, products,
+  });
+  products.map(async (el) => {
+    const foundProduct = await Product.find({ _id: { $in: el.product } });
+    if (foundProduct.length === 0) {
+      return resp.status(404).json({ message: 'The product doesn´t exists' });
+    }
+  });
+  const savedOrder = await newOrder.save();
+  const populatedOrder = await Order.findOne({ _id: savedOrder._id }).populate('products.product');
+  return resp.status(200).json(populatedOrder);
 };
 
 const getOrders = async (req, resp) => {
@@ -39,7 +37,6 @@ const getOrders = async (req, resp) => {
   resp.links(linkHeader);
   resp.status(200).json(allOrders.docs);
 };
-
 const getOrderById = async (req, resp) => {
   const validation = verifyId(req.params.orderId);
   if (validation === true) {
@@ -51,7 +48,6 @@ const getOrderById = async (req, resp) => {
   }
   return resp.status(404).json({ message: 'Id format is invalid' });
 };
-
 const uptadeOrderById = async (req, resp) => {
   const validation = verifyId(req.params.orderId);
   if (validation === true) {
@@ -72,7 +68,6 @@ const uptadeOrderById = async (req, resp) => {
   }
   return resp.status(404).json({ message: 'Id format is invalid' });
 };
-
 const deleteOrderById = async (req, resp) => {
   const validation = verifyId(req.params.orderId);
   if (validation === true) {
@@ -84,7 +79,6 @@ const deleteOrderById = async (req, resp) => {
   }
   return resp.status(404).json({ message: 'Id format is invalid' });
 };
-
 module.exports = {
   createOrder,
   getOrders,
