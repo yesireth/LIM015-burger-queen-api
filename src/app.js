@@ -11,7 +11,6 @@ const routes = require('./routes');
 const pkg = require('../package.json');
 const { createRoles } = require('./libs/initialSetup');
 
-// const { secret } = config;
 const app = express();
 createRoles();
 // configuraciones iniciales
