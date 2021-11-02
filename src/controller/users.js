@@ -48,7 +48,6 @@ const getUsers = async (req, resp) => {
   };
   resp.links(linkHeader);
   resp.status(200).json(allUsers.docs);
-  // resp.status(200).json(linkHeader);
 };
 
 const getUserById = async (req, resp) => {
