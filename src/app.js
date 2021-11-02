@@ -3,7 +3,6 @@ const cors = require('cors');
 
 const config = require('./config');
 
-
 const errorHandler = require('./middleware/error');
 
 const routes = require('./routes');
@@ -13,7 +12,6 @@ const { createRoles } = require('./libs/initialSetup');
 
 const app = express();
 createRoles();
-// configuraciones iniciales
 app.set('config', config);
 app.set('pkg', pkg);
 
